@@ -4,9 +4,13 @@ gcs_service_account: "../shiny_dashboard/gcs_service_account.json"
 gcs_bucket: "wwscanseq"
 gcs_prefix: "viralmetagenomics/reports"
 
-# Influenza A subspecies patterns to match (regex)
+# Influenza A matching criteria
+# Primary: filter by species column (catches all naming conventions)
+species_filter: "s__Alphainfluenzavirus influenzae"
+# Fallback: subspecies patterns (regex) if species column is missing
 subspecies_patterns:
   - "^t__Influenza A"
+  - "^t__H\\d+N\\d+"
 
 # BLAST database
 blast_db_name: "influenza_a_complete"

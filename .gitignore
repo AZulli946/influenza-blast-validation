@@ -13,3 +13,4 @@ results/read_metadata.tsv
 # Python
 __pycache__/
 *.pyc
+.DS_Store

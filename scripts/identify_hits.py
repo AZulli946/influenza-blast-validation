@@ -1,4 +1,9 @@
-"""Step 1: Identify Influenza A hits in precomputed virus data."""
+"""Step 1: Identify Influenza A hits in precomputed virus data.
+
+Uses species column (s__Alphainfluenzavirus influenzae) as primary filter
+to catch all naming conventions (t__Influenza A H3N2, t__H3N2, etc.).
+Falls back to subspecies regex patterns if species column is missing.
+"""
 
 import re
 import pandas as pd
@@ -6,15 +11,23 @@ import pandas as pd
 
 def run(config, results_dir):
     virus_path = config["precomputed_virus_data"]
-    patterns = config["subspecies_patterns"]
 
     print(f"Reading precomputed virus data from {virus_path}")
     df = pd.read_csv(virus_path, sep="\t", compression="gzip", dtype=str)
     print(f"  Total rows: {len(df):,}")
 
-    # Build combined regex from all patterns
-    combined = "|".join(f"(?:{p})" for p in patterns)
-    mask = df["subspecies"].str.contains(combined, regex=True, na=False)
+    # Primary: filter by species column
+    species_filter = config.get("species_filter")
+    if species_filter and "species" in df.columns:
+        mask = df["species"] == species_filter
+        print(f"  Filtering by species == '{species_filter}'")
+    else:
+        # Fallback: subspecies regex patterns
+        patterns = config["subspecies_patterns"]
+        combined = "|".join(f"(?:{p})" for p in patterns)
+        mask = df["subspecies"].str.contains(combined, regex=True, na=False)
+        print(f"  Filtering by subspecies patterns (species column not available)")
+
     hits = df.loc[mask].copy()
     print(f"  Influenza A hits: {len(hits):,}")
 
