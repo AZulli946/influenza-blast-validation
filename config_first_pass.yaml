@@ -1,3 +1,7 @@
+# First-pass BAM configuration
+# Uses .first.filt.sorted.bam instead of .third.filt.sorted.bam
+# Results saved to results_first_pass/
+
 # Paths
 precomputed_virus_data: "../shiny_dashboard/dashboard_data/precomputed_virus.tsv.gz"
 gcs_service_account: "../shiny_dashboard/gcs_service_account.json"
@@ -5,18 +9,16 @@ gcs_bucket: "wwscanseq"
 gcs_prefix: "viralmetagenomics/reports"
 
 # BAM file settings
-bam_suffix: ".third.filt.sorted.bam"   # ".first.filt.sorted.bam" for first-pass
-results_dir: "results"                   # override per run (e.g., "results_first_pass")
+bam_suffix: ".first.filt.sorted.bam"
+results_dir: "results_first_pass"
 
 # Influenza A matching criteria
-# Primary: filter by species column (catches all naming conventions)
 species_filter: "s__Alphainfluenzavirus influenzae"
-# Fallback: subspecies patterns (regex) if species column is missing
 subspecies_patterns:
   - "^t__Influenza A"
   - "^t__H\\d+N\\d+"
 
-# BLAST database
+# BLAST database (shared with third-pass run)
 blast_db_name: "influenza_a_complete"
 entrez_query: '"Influenza A virus"[Organism] AND "complete cds"[Title]'
 entrez_email: "azulli@stanford.edu"

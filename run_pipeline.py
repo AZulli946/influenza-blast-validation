@@ -49,7 +49,7 @@ def main():
 
     config, project_dir = load_config(config_path)
 
-    results_dir = project_dir / "results"
+    results_dir = project_dir / config.get("results_dir", "results")
     data_dir = project_dir / "data"
     results_dir.mkdir(exist_ok=True)
     data_dir.mkdir(exist_ok=True)

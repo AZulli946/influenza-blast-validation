@@ -17,10 +17,10 @@ def _delivery_date_to_folder(delivery_date):
     return delivery_date.replace("-", "")
 
 
-def _find_bam_path(client, bucket_name, prefix, delivery_date, sample_id):
+def _find_bam_path(client, bucket_name, prefix, delivery_date, sample_id, bam_suffix):
     """Find the BAM file path in GCS for a given sample and delivery."""
     folder = _delivery_date_to_folder(delivery_date)
-    bam_name = f"{sample_id}.third.filt.sorted.bam"
+    bam_name = f"{sample_id}{bam_suffix}"
     bam_path = f"{prefix}/{folder}_esviritu_outputs/{bam_name}"
 
     bucket = client.bucket(bucket_name)
@@ -50,6 +50,7 @@ def run(config, results_dir):
     client = _get_gcs_client(config)
     bucket_name = config["gcs_bucket"]
     prefix = config["gcs_prefix"]
+    bam_suffix = config.get("bam_suffix", ".third.filt.sorted.bam")
 
     # Group by (sample_ID, delivery_date) to avoid duplicate BAM downloads
     grouped = hits.groupby(["sample_ID", "delivery_date"])
@@ -75,7 +76,7 @@ def run(config, results_dir):
         meta = sample_meta[(sample_id, delivery_date)]
         print(f"Processing {sample_id} (delivery {delivery_date})...")
 
-        bam_path = _find_bam_path(client, bucket_name, prefix, delivery_date, sample_id)
+        bam_path = _find_bam_path(client, bucket_name, prefix, delivery_date, sample_id, bam_suffix)
         if bam_path is None:
             print(f"  WARNING: BAM not found for {sample_id} in delivery {delivery_date}")
             continue
