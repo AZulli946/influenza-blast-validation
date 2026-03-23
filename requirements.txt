@@ -1,0 +1,5 @@
+pandas
+pysam
+google-cloud-storage
+biopython
+pyyaml

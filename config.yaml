@@ -1,0 +1,24 @@
+# Paths
+precomputed_virus_data: "../shiny_dashboard/dashboard_data/precomputed_virus.tsv.gz"
+gcs_service_account: "../shiny_dashboard/gcs_service_account.json"
+gcs_bucket: "wwscanseq"
+gcs_prefix: "viralmetagenomics/reports"
+
+# Influenza A subspecies patterns to match (regex)
+subspecies_patterns:
+  - "^t__Influenza A"
+
+# BLAST database
+blast_db_name: "influenza_a_complete"
+entrez_query: '"Influenza A virus"[Organism] AND "complete cds"[Title]'
+entrez_email: "azulli@stanford.edu"
+entrez_batch_size: 10000
+
+# BLAST parameters
+max_target_seqs: 100
+evalue: 1e-5
+num_threads: 4
+
+# Post-BLAST filtering
+min_percent_identity: 98.0
+terminal_filter_bp: 150
